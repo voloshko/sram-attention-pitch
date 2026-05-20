@@ -101,6 +101,25 @@ server generations, yet both can run the same native 1.58-bit Rust REST path at
 practical slow-agent speed for overnight tasks, triage, summarization, routing,
 and background code-assistant workflows.
 
+### Unit Economics Snapshot
+
+Assuming continuous full-load generation for 30 days
+(`2,592,000 seconds/month`) and counting generated tokens:
+
+| Provider / model | Monthly VM cost | Throughput | Generated tokens/month | Cost / 1M generated tokens |
+|---|---:|---:|---:|---:|
+| Oracle A1 free-tier / Falcon3-1B | €0 | ~30.2 tok/s | ~78.3M | €0.00 |
+| Google Cloud C4A spot / Falcon3-1B | ~€12/mo | ~44.0 tok/s | ~114.0M | ~€0.105 |
+| Google Cloud C4A spot / MS BitNet 2B | ~€12/mo | ~20.6 tok/s | ~53.4M | ~€0.225 |
+| Google Cloud C4A spot / Falcon3-3B | ~€12/mo | ~24.4 tok/s | ~63.2M | ~€0.190 |
+| Google Cloud C4A spot / Falcon3-7B | ~€12/mo | ~10.9 tok/s | ~28.3M | ~€0.425 |
+| Google Cloud C4A spot / Falcon3-10B | ~€12/mo | ~8.2 tok/s | ~21.3M | ~€0.565 |
+
+The commercial headline is simple: a saturated low-cost Google ARM spot VM can
+already put Falcon3-1B near **ten euro-cents per million generated tokens**
+before storage, network, uptime, and margin. Oracle's free tier is a zero-cost
+experimentation lane and a useful slow-agent baseline.
+
 ## Why Investors Should Care
 
 ```mermaid
