@@ -88,15 +88,18 @@ Measured internal project results:
 | Falcon3-1B native 1.58-bit Rust REST | ~96.9-100.6 tok/s warm generation | Apple M3 Pro CPU-only, no GPU |
 | Falcon3-3B native 1.58-bit Rust REST | ~56.8 tok/s warm generation | Apple M3 Pro CPU-only, size-scaling lane |
 | Falcon3-1B native 1.58-bit Rust REST on Oracle A1 | ~30.2 tok/s warm generation | Full model on ARM cloud free-tier, best profile uses 3 Neoverse-N1 worker threads |
+| Falcon3-1B native 1.58-bit Rust REST on Google Cloud C4A/Axion | ~44.0 tok/s warm generation | Full model on 2 vCPU Neoverse-V2, 4 GiB RAM, 80 MB shared L3 |
+| Google Cloud C4A/Axion model sweep | MS BitNet 2B ~20.6 tok/s; Falcon3 3B ~24.4; 7B ~10.9; 10B ~8.2 | Same Rust REST runtime on one low-cost ARM VM |
 | ModernBERT Diff Rust REST | ~26 tok/s one-mask fixture, ~88.8 effective tok/s normalized cycle | PyTorch removed from inference path |
 | Original MS BitNet comparison | ~2-3x faster in reproduced local lane | Same local development class |
 
 The important point is not a single benchmark trophy. The important point is
 that CPU-only low-bit inference is already fast enough to become a product
-category for small models. The Oracle A1 result is especially important: a
-cheap ARM VM without GPU can already run a native 1.58-bit model at practical
-slow-agent speed for overnight tasks, triage, summarization, routing, and
-background code-assistant workflows.
+category for small models. The cloud ARM results are especially important:
+Oracle A1 and Google Cloud C4A/Axion are different providers and different ARM
+server generations, yet both can run the same native 1.58-bit Rust REST path at
+practical slow-agent speed for overnight tasks, triage, summarization, routing,
+and background code-assistant workflows.
 
 ## Why Investors Should Care
 
@@ -135,7 +138,7 @@ flowchart LR
     Core --> Cloud["Cloud ARM"]
     Cloud --> Oracle["Oracle Ampere A1"]
     Cloud --> AWS["AWS Graviton"]
-    Cloud --> Google["Google Axion"]
+    Cloud --> Google["Google C4A / Axion"]
     Cloud --> Azure["Azure Cobalt"]
 ```
 
@@ -146,7 +149,7 @@ The same architectural bet applies across platforms:
 | macOS / Apple Silicon | Development and prosumer deployment | Strong CPU cache hierarchy, easy demos |
 | Android | Long-term distribution | Billions of devices, fragmented NPU landscape |
 | Windows ARM | New laptop market | Snapdragon X-class machines create CPU-only demand |
-| Cloud ARM | First commercial wedge | Cheap endpoints without GPU reservation |
+| Cloud ARM | First commercial wedge | Oracle and Google ARM full-model results now exist; cheap endpoints without GPU reservation |
 
 ## Product Shape
 
@@ -192,6 +195,7 @@ has crossed a practical threshold:
 flowchart LR
     Mac["Mac CPU-only dev box<br/>Falcon3-1B ~100 tok/s"] --> Runtime["Shared Rust REST runtime"]
     Oracle["Oracle ARM free-tier<br/>Falcon3-1B ~30 tok/s"] --> Runtime
+    Google["Google C4A / Axion<br/>Falcon3-1B ~44 tok/s"] --> Runtime
     Runtime --> Agents["Slow agents<br/>overnight tasks"]
     Runtime --> SaaS["Cheap small-model SaaS endpoints"]
     Runtime --> Local["Private local inference"]
@@ -206,7 +210,7 @@ quality." It is:
 - good enough for narrow work;
 - easy to deploy next to existing services.
 
-At `~30 tok/s` on an ARM cloud VM and `~100 tok/s` on a laptop CPU, native
+At `~30-44 tok/s` on low-cost ARM cloud VMs and `~100 tok/s` on a laptop CPU, native
 1.58-bit models are no longer only demos. They are viable for production
 background work where latency budgets are seconds, not milliseconds.
 
@@ -260,9 +264,14 @@ Current stage:
 - technical prototype exists;
 - MS BitNet, Bonsai, Falcon3, and ModernBERT Diff lanes exist;
 - REST integration exists;
-- cloud ARM full-model Falcon3 baseline exists at ~30 tok/s on Oracle A1;
+- cloud ARM full-model Falcon3 baselines exist on two providers:
+  - Oracle A1 at ~30 tok/s;
+  - Google Cloud C4A/Axion at ~44 tok/s;
 - platform autotune has found real profile differences, such as 3 worker
-  threads beating 4 on Oracle A1;
+  threads beating 4 on Oracle A1 while Google C4A prefers its visible 2 vCPUs;
+- text-generation quality is now tracked separately from raw token-id/full-path
+  speed; the current cloud runs prove launchability and throughput, while the
+  next gate fixes tokenizer/template/sampler parity;
 - Android and production hosted serving are next.
 
 ## Contact
