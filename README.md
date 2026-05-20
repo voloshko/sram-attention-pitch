@@ -90,6 +90,7 @@ Measured internal project results:
 | Falcon3-1B native 1.58-bit Rust REST on Oracle A1 | ~30.2 tok/s warm generation | Full model on ARM cloud free-tier, best profile uses 3 Neoverse-N1 worker threads |
 | Falcon3-1B native 1.58-bit Rust REST on Google Cloud C4A/Axion | ~44.0 tok/s warm generation | Full model on 2 vCPU Neoverse-V2, 4 GiB RAM, 80 MB shared L3 |
 | Google Cloud C4A/Axion model sweep | MS BitNet 2B ~20.6 tok/s; Falcon3 3B ~24.4; 7B ~10.9; 10B ~8.2 | Same Rust REST runtime on one low-cost ARM VM |
+| Google Cloud N4A recertification | Falcon3-1B ~30.7 tok/s | Newer Neoverse-N3 and 112 MB L3 tested; C4A remains faster for current kernels |
 | ModernBERT Diff Rust REST | ~26 tok/s one-mask fixture, ~88.8 effective tok/s normalized cycle | PyTorch removed from inference path |
 | Original MS BitNet comparison | ~2-3x faster in reproduced local lane | Same local development class |
 
@@ -114,11 +115,13 @@ Assuming continuous full-load generation for 30 days
 | Google Cloud C4A spot / Falcon3-3B | ~€12/mo | ~24.4 tok/s | ~63.2M | ~€0.190 |
 | Google Cloud C4A spot / Falcon3-7B | ~€12/mo | ~10.9 tok/s | ~28.3M | ~€0.425 |
 | Google Cloud C4A spot / Falcon3-10B | ~€12/mo | ~8.2 tok/s | ~21.3M | ~€0.565 |
+| Google Cloud N4A spot / Falcon3-1B | ~€12/mo | ~30.7 tok/s | ~79.7M | ~€0.151 |
 
 The commercial headline is simple: a saturated low-cost Google ARM spot VM can
 already put Falcon3-1B near **ten euro-cents per million generated tokens**
 before storage, network, uptime, and margin. Oracle's free tier is a zero-cost
-experimentation lane and a useful slow-agent baseline.
+experimentation lane and a useful slow-agent baseline. N4A was also tested; it
+is usable, but C4A is currently the better Google ARM SKU for this runtime.
 
 ## Why Investors Should Care
 
@@ -288,6 +291,8 @@ Current stage:
   - Google Cloud C4A/Axion at ~44 tok/s;
 - platform autotune has found real profile differences, such as 3 worker
   threads beating 4 on Oracle A1 while Google C4A prefers its visible 2 vCPUs;
+- N4A spot recertification proved that newer ARM generation and larger L3 do not
+  automatically win; benchmarked profile selection matters;
 - text-generation quality is now tracked separately from raw token-id/full-path
   speed; the current cloud runs prove launchability and throughput, while the
   next gate fixes tokenizer/template/sampler parity;
