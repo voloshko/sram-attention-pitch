@@ -42,12 +42,14 @@ flowchart LR
     F --> I["Android / macOS / Windows ARM / Cloud ARM"]
 ```
 
-`sram_attention` targets two model families:
+`sram_attention` now has four active model families in one champion race:
 
 | Family | Why it matters |
 |---|---|
 | **MS BitNet b1.58** | Public low-bit ecosystem and CPU-first reference point |
 | **Bonsai-style 1-bit / g128** | Large low-bit local model path with aggressive cache-residency experiments |
+| **Falcon3 native 1.58-bit** | Open native ternary GGUF family with strong CPU-only speed and 1B/3B/7B/10B scaling path |
+| **ModernBERT Diff 1.58-bit** | Diffusion-style low-bit experiment for block generation and cache-resident repeated denoise loops |
 
 ## Core Insight
 
@@ -83,12 +85,18 @@ Measured internal project results:
 | MS BitNet Rust REST path | ~60.9 tok/s warm 16-token generation | Apple M3 Pro class hardware |
 | Bonsai Rust REST path | ~40.3 tok/s generation | Within 1% of direct benchmark |
 | Bonsai direct path | ~42 tok/s class | Exact-checksum benchmark lane |
-| Oracle A1 synthetic projection | ~5.9-6.3 tok/s | MS-BitNet-shaped model-free ARM cloud probe |
+| Falcon3-1B native 1.58-bit Rust REST | ~96.9-100.6 tok/s warm generation | Apple M3 Pro CPU-only, no GPU |
+| Falcon3-3B native 1.58-bit Rust REST | ~56.8 tok/s warm generation | Apple M3 Pro CPU-only, size-scaling lane |
+| Falcon3-1B native 1.58-bit Rust REST on Oracle A1 | ~30.2 tok/s warm generation | Full model on ARM cloud free-tier, best profile uses 3 Neoverse-N1 worker threads |
+| ModernBERT Diff Rust REST | ~26 tok/s one-mask fixture, ~88.8 effective tok/s normalized cycle | PyTorch removed from inference path |
 | Original MS BitNet comparison | ~2-3x faster in reproduced local lane | Same local development class |
 
 The important point is not a single benchmark trophy. The important point is
 that CPU-only low-bit inference is already fast enough to become a product
-category for small models.
+category for small models. The Oracle A1 result is especially important: a
+cheap ARM VM without GPU can already run a native 1.58-bit model at practical
+slow-agent speed for overnight tasks, triage, summarization, routing, and
+background code-assistant workflows.
 
 ## Why Investors Should Care
 
@@ -159,6 +167,7 @@ Initial product:
 - Anthropic-compatible `/v1/messages`;
 - one low-bit model per process;
 - startup autotune by platform;
+- cloud ARM serving profiles for cheap always-on endpoints;
 - deterministic greedy serving first;
 - public benchmark dashboard later.
 
@@ -173,6 +182,33 @@ Initial product:
 
 `sram_attention` is specialized. It is not trying to be every model runtime. It
 is trying to be the best CPU path for useful small low-bit models.
+
+## Why This Is Production-Relevant Now
+
+The current runtime is still an engineering prototype, but the throughput class
+has crossed a practical threshold:
+
+```mermaid
+flowchart LR
+    Mac["Mac CPU-only dev box<br/>Falcon3-1B ~100 tok/s"] --> Runtime["Shared Rust REST runtime"]
+    Oracle["Oracle ARM free-tier<br/>Falcon3-1B ~30 tok/s"] --> Runtime
+    Runtime --> Agents["Slow agents<br/>overnight tasks"]
+    Runtime --> SaaS["Cheap small-model SaaS endpoints"]
+    Runtime --> Local["Private local inference"]
+```
+
+For many production tasks, the requirement is not "frontier model at maximum
+quality." It is:
+
+- always-on;
+- private or cheap;
+- deterministic;
+- good enough for narrow work;
+- easy to deploy next to existing services.
+
+At `~30 tok/s` on an ARM cloud VM and `~100 tok/s` on a laptop CPU, native
+1.58-bit models are no longer only demos. They are viable for production
+background work where latency budgets are seconds, not milliseconds.
 
 ## Engineering Discipline
 
@@ -222,9 +258,11 @@ is separate.
 Current stage:
 
 - technical prototype exists;
-- MS BitNet and Bonsai lanes exist;
+- MS BitNet, Bonsai, Falcon3, and ModernBERT Diff lanes exist;
 - REST integration exists;
-- cloud ARM platform probing has started;
+- cloud ARM full-model Falcon3 baseline exists at ~30 tok/s on Oracle A1;
+- platform autotune has found real profile differences, such as 3 worker
+  threads beating 4 on Oracle A1;
 - Android and production hosted serving are next.
 
 ## Contact
