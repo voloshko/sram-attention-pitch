@@ -85,6 +85,53 @@ I8 activation, wider lm_head row shapes, and the F32 coherence fallback were
 regressions. Those failures are kept as planner memory, not thrown away as
 tribal knowledge.
 
+### Alpha Mutant Method
+
+The champion race now has a second lane: not only "pick the best known plan",
+but "mutate the champions and see whether the theory missed something." We call
+this the Alpha Mutant method.
+
+```mermaid
+flowchart LR
+    A["Champion history"] --> D["Gene pool"]
+    B["Physical plans"] --> D
+    C["ABI scout words"] --> D
+    D --> E["Free Optuna mutation"]
+    E --> F["Fast smoke suspects"]
+    F --> G{"A/B/B/A coronation"}
+    G -->|robust win| H["Promote new champion"]
+    G -->|weak or noisy| I["Write failure memory"]
+    I --> D
+```
+
+Why this matters: a deterministic planner eventually becomes conservative. It
+keeps proposing what its current theory already understands. The Alpha Mutant
+lane is allowed to be stranger. It recombines winners, rejected candidates, and
+new primitive words, then lets hardware decide.
+
+The guardrail is just as important as the hunt:
+
+```mermaid
+flowchart TB
+    S["Playful scout lane<br/>cheap 32-token runs"] --> U["Unusual suspects"]
+    U --> C["Serious coronation lane<br/>checksum + REST + A/B/B/A"]
+    C -->|large stable gain| P["Champion baseline changes"]
+    C -->|small or unstable gain| M["Planner memory improves"]
+```
+
+Recent Falcon3 example:
+
+| Step | Result | Interpretation |
+|---|---:|---|
+| Free Optuna smoke run | found `79.310 tok/s` and `79.126 tok/s` suspects | Interesting neighborhood |
+| Reciprocal A/B/B/A at longer shape | only `+0.233%` and `+0.471%` mean deltas | Not enough to promote |
+| Final decision | champion stayed unbeaten | Method worked: curiosity without self-deception |
+
+That discipline is investor-relevant. The system can explore aggressively, but
+it only turns a result into a default after a repeatable full-path gate. Wins
+become reusable primitives. Losses become searchable memory. Both make the next
+race better.
+
 ## Core Insight
 
 Most inference stacks optimize this path:
