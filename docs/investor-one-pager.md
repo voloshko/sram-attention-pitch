@@ -1,5 +1,7 @@
 # Investor One-Pager
 
+For a concise live status view, start with [public landing](public-landing.md).
+
 ## Company Thesis
 
 Small low-bit models are becoming useful. GPUs are still priced for scarcity.
@@ -74,4 +76,3 @@ Funding to ship:
 - Android SDK and phone benchmarks;
 - hosted low-cost small-model endpoint;
 - model partner integrations.
-

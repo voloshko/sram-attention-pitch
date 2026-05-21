@@ -10,6 +10,9 @@ This repository intentionally contains **no source code, no model weights, and
 no private benchmark artifacts**. It exists for investors, accelerator
 applications, technical partners, and early design customers.
 
+For a concise investor-facing status page, start here:
+[docs/public-landing.md](docs/public-landing.md).
+
 ## The One-Liner
 
 We make small 1-bit / 1.58-bit models run fast on ordinary ARM CPUs, using
