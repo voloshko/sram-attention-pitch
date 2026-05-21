@@ -51,6 +51,40 @@ flowchart LR
 | **Falcon3 native 1.58-bit** | Open native ternary GGUF family with strong CPU-only speed and 1B/3B/7B/10B scaling path |
 | **ModernBERT Diff 1.58-bit** | Diffusion-style low-bit experiment for block generation and cache-resident repeated denoise loops |
 
+## The Champion Race
+
+The newest result is not only another benchmark. It is evidence that the runtime
+has become an optimization system where models help each other.
+
+```mermaid
+flowchart LR
+    F["Falcon3 race<br/>15 candidates"] --> P["Promote reusable primitive<br/>NeonAttentionScore"]
+    P --> L["Planner memory<br/>cost + compatibility"]
+    L --> M["MS BitNet race<br/>15 candidates"]
+    M --> W["Same primitive wins again"]
+    W --> R["Leaderboard + learning ledger<br/>saved in Git"]
+    R --> L
+```
+
+In plain English: an acceleration primitive discovered on Falcon3 was proposed
+by the planner for MS BitNet, benchmarked in a separate synchronized `5 x 3`
+race, and won there too.
+
+| Model | Baseline | Winning transferred plan | Result |
+|---|---:|---|---:|
+| Falcon3-1B native 1.58-bit | 71.870 tok/s | `attention-score-neon-on` | 76.924 tok/s, +7.03% |
+| MS BitNet b1.58 | 42.216 tok/s | `attention-score-neon-on` | 45.345 tok/s, +7.41% |
+
+That is the product moat in miniature. We are not hand-tuning one model. We are
+building a dictionary of reusable low-bit inference primitives, measuring their
+price on real hardware, and letting the planner compose them across model
+families.
+
+The failed transfers matter too. The same MS BitNet race showed that per-tensor
+I8 activation, wider lm_head row shapes, and the F32 coherence fallback were
+regressions. Those failures are kept as planner memory, not thrown away as
+tribal knowledge.
+
 ## Core Insight
 
 Most inference stacks optimize this path:
@@ -102,6 +136,10 @@ server generations, yet both can run the same native 1.58-bit Rust REST path at
 practical slow-agent speed for overnight tasks, triage, summarization, routing,
 and background code-assistant workflows.
 
+The champion-race result adds a second proof point: improvements are portable.
+Falcon3 and MS BitNet now share an optimization loop, so every new primitive can
+be tested as a cross-model asset instead of a one-off patch.
+
 ### Unit Economics Snapshot
 
 Assuming continuous full-load generation for 30 days
@@ -149,6 +187,22 @@ The wedge is **cost-effective inference for small models**:
 
 Many of these do not need a frontier GPU model. They need a cheap, fast,
 resident small model.
+
+The deeper wedge is an optimization flywheel:
+
+```mermaid
+flowchart TD
+    A["New low-bit model enters"] --> B["Run champion race"]
+    B --> C["Promote winning primitives"]
+    B --> D["Record failed combinations"]
+    C --> E["Planner gets smarter"]
+    D --> E
+    E --> F["Next model starts from better priors"]
+    F --> B
+```
+
+Each supported model increases the value of the runtime for the next model. This
+is closer to a low-bit inference compiler than a normal model server.
 
 ## Platform Story
 
