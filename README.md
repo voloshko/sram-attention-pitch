@@ -132,6 +132,41 @@ it only turns a result into a default after a repeatable full-path gate. Wins
 become reusable primitives. Losses become searchable memory. Both make the next
 race better.
 
+### Horizontal Gene Transfer
+
+The same primitive dictionary should not be trapped inside LLM inference. The
+next experiment borrows a biological idea: horizontal gene transfer. A useful
+acceleration "gene" can jump into another organism.
+
+```mermaid
+flowchart LR
+    A["Low-bit LLM runtime<br/>cache-residency genes"] --> B["Horizontal transfer"]
+    B --> C["Small-image kernels<br/>Rust instead of Python + OpenCV"]
+    C --> D["New champion race"]
+    D --> E{"Reusable primitive?"}
+    E -->|yes| F["Promote back into shared dictionary"]
+    E -->|no| G["Keep local domain lesson"]
+    F --> A
+```
+
+The first foreign host is small image processing on weak ARM CPUs: decode a
+compact JPEG, keep the working set hot, and replace a narrow Python/OpenCV path
+with a low-level Rust implementation. Many of the same words apply:
+
+| Cache-residency gene | Image-domain form |
+|---|---|
+| Packed layout | cache-line aligned RGB/Lab/gray tiles |
+| Elementwise LUT | color transforms, gamma tables, threshold maps |
+| Fast aggregation | Otsu histograms, radial statistics, min/max reductions |
+| Runtime autotune | tile shape, thread count, storage/preload mode |
+| Champion gate | golden-output comparison against the old pipeline |
+
+This matters commercially because it turns the runtime from "one fast model
+server" into a reusable optimization method for CPU-bound edge workloads. The
+same race discipline can harden medical-device image preprocessing, local
+document extraction, sensor pipelines, and other small-data tasks where Python
+is convenient but too heavy.
+
 ## Core Insight
 
 Most inference stacks optimize this path:
