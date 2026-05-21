@@ -19,12 +19,22 @@ grounded in visible external signals.
 
 - AWS Graviton:
   <https://aws.amazon.com/ec2/graviton/>
+- AWS Graviton-based SageMaker inference:
+  <https://aws.amazon.com/blogs/machine-learning/run-machine-learning-inference-workloads-on-aws-graviton-based-instances-with-amazon-sagemaker/>
 - Google Axion:
   <https://cloud.google.com/products/axion>
+- Google Compute Engine CPU platforms:
+  <https://docs.cloud.google.com/compute/docs/cpu-platforms>
+- Google Compute Engine general-purpose machine families:
+  <https://cloud.google.com/compute/docs/general-purpose-machines>
 - Azure Cobalt:
   <https://azure.microsoft.com/en-us/products/virtual-machines/cobalt>
+- Azure Cobalt processor-based VM docs:
+  <https://learn.microsoft.com/en-us/azure/virtual-machines/sizes/cobalt-overview>
 - Oracle Ampere A1:
   <https://www.oracle.com/cloud/compute/arm/>
+- Oracle Always Free resources:
+  <https://docs.oracle.com/en-us/iaas/Content/FreeTier/freetier_topic-Always_Free_Resources.htm>
 - Arm cloud AI market page:
   <https://www.arm.com/markets/cloud-ai/cloud-computing>
 
@@ -32,6 +42,8 @@ grounded in visible external signals.
 
 - Qualcomm AI:
   <https://www.qualcomm.com/products/features/artificial-intelligence>
+- Qualcomm Snapdragon 8 Elite Gen 5:
+  <https://www.qualcomm.com/smartphones/products/8-series/snapdragon-8-elite-gen-5>
 - MediaTek Dimensity AI:
   <https://www.mediatek.com/technology/artificial-intelligence>
 - Microsoft Copilot+ PC / Windows ARM ecosystem:
@@ -48,4 +60,3 @@ The important external signal is convergence:
 5. GPU inference remains expensive for small always-on workloads.
 
 `sram_attention` sits at the intersection of those trends.
-
