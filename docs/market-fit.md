@@ -30,6 +30,7 @@ low-bit inference paths as ARM CPUs and native 1-bit models improve.
 | Low-bit inference optimizer / compiler | 7.5/10 | 9/10 | Physical planner, primitive dictionary, and proof-carrying story are differentiated and defensible |
 | Mac / Windows ARM local runtime | 7/10 | 8/10 | Strong privacy/dev story; needs polished binaries and coherent text-generation admission |
 | Android on-device SDK | 6.5/10 | 8.5/10 | Huge distribution, but thermal policy, packaging, and OEM/app channels are harder |
+| Medical imaging CV kernels | 6.5/10 | 8/10 | Strong adjacency if proof-backed image primitives and auditable pipelines land |
 | Dense coding-model serving | 6/10 | 7/10 | Qwen3.6 GPU lane proves harness skill, but it is adjacent to the CPU-only core wedge |
 | Replacing all GPU inference | 2/10 | 3/10 | Wrong category; frontier/high-batch workloads stay GPU/NPU-first |
 
@@ -215,6 +216,23 @@ Good buyer:
 Adoption blocker:
 
 - needs polished orchestration examples and evidence that fallback saves quality.
+
+### JTBD 4: Run Auditable Medical Imaging Pipelines
+
+"When image processing supports a medical workflow, I want fast, cache-friendly
+CV primitives with stronger proofs, traceable outputs, and clear quality
+bounds."
+
+Good buyer:
+
+- medical imaging software team;
+- device or workflow vendor;
+- healthtech platform team.
+
+Adoption blocker:
+
+- needs stronger correctness evidence, reproducibility, and validation against
+  existing clinical or preprocessing pipelines.
 
 ## Competitive Read
 
