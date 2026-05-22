@@ -68,6 +68,17 @@ The public story is intentionally auditable:
 | Device runtime | Continue Mac and Windows ARM readiness and Android packaging |
 | Public proof | Keep the champion log, rationale column, and benchmark story synchronized |
 | Productization | Continue shaping a cheap small-model endpoint and private deployment story |
+| Image/CV primitives | Prototype proof-backed image-processing kernels for medical imaging and other CV workloads |
+
+## Adjacent Pitch Surface
+
+The same primitive discipline can widen beyond LLM inference:
+
+- image/CV methods can be expressed as cache-friendly primitive words;
+- stronger proof layers can be attached to each primitive and composition law;
+- medical imaging is a strong commercial adjacency because correctness,
+  traceability, and reproducibility matter there even more than in general
+  consumer image processing.
 
 ## Links
 
