@@ -247,6 +247,9 @@ Adoption blocker:
 Best response: do not compete as a generic runtime. Compete as the **low-bit ARM
 inference optimizer and serving stack**.
 
+We move image processing from fixed-function speed to composable, verified,
+server-grade pipelines.
+
 ## Pricing Hypotheses
 
 | Product | Possible pricing | What validates it |

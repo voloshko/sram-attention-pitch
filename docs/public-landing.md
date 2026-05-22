@@ -80,6 +80,9 @@ The same primitive discipline can widen beyond LLM inference:
   traceability, and reproducibility matter there even more than in general
   consumer image processing.
 
+We move image processing from fixed-function speed to composable, verified,
+server-grade pipelines.
+
 ## Links
 
 - [README overview](../README.md)

@@ -156,6 +156,9 @@ The first foreign host is small image processing on weak ARM CPUs: decode a
 compact JPEG, keep the working set hot, and replace a narrow Python/OpenCV path
 with a low-level Rust implementation. Many of the same words apply:
 
+We move image processing from fixed-function speed to composable, verified,
+server-grade pipelines.
+
 | Cache-residency gene | Image-domain form |
 |---|---|
 | Packed layout | cache-line aligned RGB/Lab/gray tiles |
